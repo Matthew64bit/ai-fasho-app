@@ -1,0 +1,12 @@
+{
+  "id": "brand_xxx/UID",
+  "brand": "brand - poate fi extrapolat din id? putem sa le tinem si cu UID ig si sa facem brand separat",
+  "category": "t-shirt/shirt/blouse/jeans/trousers",
+  "gender": "male/female man/woman m/f m/w",
+  "style": "casual/sporty/smart/street/night/home etc to be refined",
+  "fit": "regular/oversized/skinny/slim",
+  "colours": ["blue", "magenta", "brown"],
+  "season": "F/W S/S",
+  "price": "xx,yy RON - store currency tables for EUR, USD etc",
+  "url": "https://brand.ro"
+}

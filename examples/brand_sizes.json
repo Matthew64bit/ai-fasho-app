@@ -1,0 +1,7 @@
+{
+  "id": "vedem",
+  "brand": "brand",
+  "category": "t-shirt/pants/jacket etc",
+  "size_label": "S/M/32x30 etc",
+  "measurements": "json file for each brand - category - size_label pair => combination for PK instead of id"
+}

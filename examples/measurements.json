@@ -1,0 +1,5 @@
+{
+  "wasit": {"min":  "xx.yy cm", "max": "xx.yy cm"},
+  "hips": {"min": "xx.yy cm", "max": "xx.yy cm"},
+  "etc": "etc"
+}
