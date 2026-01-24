@@ -1,4 +1,4 @@
-#create read update delete
+# create read update delete
 from src.my_logger import logger
 import uuid
 
@@ -17,12 +17,13 @@ dummy_data = {
     "url": "https://dummyurl.com"
 }
 
+
 def create(conn, cur, data):
     query = """
             INSERT INTO clothes
-            (id, brand, category, gender, style, fit, colours, season, price, url)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    """
+                (id, brand, category, gender, style, fit, colours, season, price, url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) \
+            """
     try:
         cur.execute(query, (
             dummy_data["id"],

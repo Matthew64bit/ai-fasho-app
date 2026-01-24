@@ -5,6 +5,7 @@
   "gender": "M/F",
   "style": ["aesthetic", "occasion"],
   "fit": "regular/oversized/skinny/slim",
+  "model": "plain/printed/checkered etc",
   "colours": ["blue", "magenta", "brown"],
   "season": "F/W S/S",
   "price": "xx,yy RON - store currency tables for EUR, USD etc",

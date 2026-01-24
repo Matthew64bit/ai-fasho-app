@@ -8,6 +8,7 @@ from src.my_logger import logger
 load_dotenv()
 logger.set_log_file(__name__)
 
+
 # TODO
 def connect():
     db_config = {
@@ -33,6 +34,7 @@ def connect():
     except OperationalError as e:
         logger.error(str(e))
         return None, None
+
 
 # TODO
 def disconnect(conn, cur):
