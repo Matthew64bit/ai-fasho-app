@@ -5,7 +5,7 @@ import json
 import datetime
 from . import crud
 from src.utils.text_formatter import format_counter, format_time
-from src.utils.image_fromatter import stitch_images
+from src.utils.image_formatter import stitch_images
 from src.my_logger import logger
 
 logger.set_log_file(__name__)

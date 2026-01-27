@@ -11,18 +11,26 @@ def create(conn, cur, data):
             """
     try:
         cur.execute(query, (
-            data["id"],
-            data["brand"],
-            data["category"],
-            data["gender"],
-            data["style"],
-            data["fit"],
-            data["colours"],
-            data["season"],
-            data["price"],
-            data["url"]
+            data['id'],
+            data['brand'],
+            data['category'],
+            data['gender'],
+            data['style'],
+            data['fit'],
+            data['colours'],
+            data['season'],
+            data['price'],
+            data['url']
         ))
         conn.commit()
 
+    except Exception as e:
+        logger.error(str(e))
+
+def read(cur, query: str):
+    try:
+        cur.execute(query)
+        data = cur.fetchall()
+        return data
     except Exception as e:
         logger.error(str(e))
