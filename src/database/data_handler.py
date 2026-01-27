@@ -1,29 +1,42 @@
 import os
 import cv2
 import uuid
+import json
+import datetime
+from . import crud
 from src.utils.text_formatter import format_counter, format_time
 from src.utils.image_fromatter import stitch_images
-import json
+from src.my_logger import logger
 
+logger.set_log_file(__name__)
 FILEPATH = f"C:\\Users\\{os.getlogin()}\\Pictures\\"
+debug_val = 0
+
 
 def organize(conn, cur):
     print("Chose image format:\n1 for APPLE || 2 for WINDOWS")
     choice = int(input())
 
     if choice == 1:
+        data = organize_apple()
+    elif choice == 2:
         data = organize_windows()
+    else:
+        raise ValueError("Index out of bounds")
+    try:
+        for d in data:
+            crud.create(conn, cur, d)
+        logger.info(f"Inserted {len(data)} items successfully!")
+
+    except Exception as e:
+        logger.error(f"Encountered an error: {str(e)}")
 
 
 def organize_windows():
     print("Please input start date and time in following format:\nYYYY MM DD")
     date = input().split(' ')
 
-    print("Please input starting counter, if no value inserted default value is 0")
-    counter = int(input())
-    if counter is None:
-        counter = 0
-
+    images = []
     data = []
     bookmark = None
     for h in range(0, 24):
@@ -31,13 +44,21 @@ def organize_windows():
             for s in range(0, 60):
                 ss, mm, hh = format_time(s), format_time(m), format_time(h)
                 if os.path.exists("{}Screenshots\\Screenshot {}-{}-{} {}{}{}.png".format(FILEPATH, date[0], date[2], date[1], hh, mm, ss)):
-                    cid = uuid.uuid4()
-                    data.append(cid)
-                    # TODO - Image pair for windows
+                    images.append(cv2.imread("{}Screenshots\\Screenshot {}-{}-{} {}{}{}.png".format(FILEPATH, date[0], date[2], date[1], hh, mm, ss)))
+
+    idx = 0
+    while idx < len(images):
+        stitch = stitch_images(images[idx], images[idx + 1])
+        cid = str(uuid.uuid4())
+        cv2.imwrite("{}Clothes\\{}.png".format(FILEPATH, cid), stitch)
+
+        bookmark, item = read_article(bookmark)
+        item["id"] = cid
+        data.append(item)
+
+        idx+= 2
 
 
-                    bookmark, item = read_article(bookmark)
-                    data.append(item)
     return data
 
 
@@ -61,7 +82,6 @@ def organize_apple():
             stitch = stitch_images(img1, img2)
             cv2.imwrite("{}Clothes\\{}.png".format(FILEPATH, cid), stitch)
 
-            # TODO - Bookmark
             bookmark, item = read_article(bookmark)
             item["id"] = cid
             data.append(item)
@@ -69,36 +89,27 @@ def organize_apple():
             idx += 1
     return data
 
-def clean_newlines(obj):
-    if isinstance(obj, dict):
-        return {k: clean_newlines(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [clean_newlines(elem) for elem in obj]
-    elif isinstance(obj, str):
-        return obj.strip()  # This removes the \n and leading/trailing spaces
-    return obj
-
 
 def data_to_json(data):
-    clean_data = clean_newlines(data)
-    with open(f"{FILEPATH}clothes.json", "w") as f:
-        json.dump(clean_data, f, indent = 4)
+    date = str(datetime.datetime.now().date())
+    with open(f"{FILEPATH}{date}.json", "w") as f:
+        json.dump(data, f, indent = 4)
 
 
 def read_article(bookmark=None):
     idx = 0
     val = []
+
     if bookmark is not None:
         with open(f"{FILEPATH}clothes.txt", "r") as f:
             f.seek(bookmark)
             while idx < 10:
                 line = f.readline()
                 if ' ' in line:
-                    val.append(line.split(' '))
+                    val.append([x.strip() for x in line.split(' ')])
                 else:
-                    val.append(line)
+                    val.append(line.strip())
                 idx += 1
-            line = f.readline()
             line = f.readline()
             bookmark = f.tell()
     else:
@@ -106,13 +117,16 @@ def read_article(bookmark=None):
             while idx < 10:
                 line = f.readline()
                 if ' ' in line:
-                    val.append(line.split(' '))
+                    val.append([x.strip() for x in line.split(' ')])
                 else:
-                    val.append(line)
+                    val.append(line.strip())
                 idx += 1
             line = f.readline()
-            line = f.readline()
             bookmark = f.tell()
+
+    if type(val[6]) != list:
+        val[6] = [val[6]]
+
     return bookmark, {
         "id": None,
         "brand": val[0],

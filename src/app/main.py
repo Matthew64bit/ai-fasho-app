@@ -1,5 +1,10 @@
-from src.database.data_handler import data_to_json, organize_apple
+from src.database.data_handler import organize
+from src.database.connection import *
 
-data = organize_apple()
+def main():
+    conn, cur = connect()
+    organize(conn, cur)
+    disconnect(conn, cur)
 
-data_to_json(data)
+if __name__ == "__main__":
+    main()
