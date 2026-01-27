@@ -6,5 +6,5 @@ def main():
     organize(conn, cur)
     disconnect(conn, cur)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
