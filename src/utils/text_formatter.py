@@ -23,7 +23,7 @@ def format_time(time: int = 0) -> str:
 # if min => price smaller or eq to price, if max => price bigger or eq to price, if between => price between filters['price'][0] and filters['price'][1]
 # NEED TO MAKE SURE 'range' FIELD IS BEFORE 'price' FILED
 
-def format_query(filters: dict) -> str:
+def format_clothes_search(filters: dict) -> str:
     base_query = "SELECT * FROM clothes WHERE "
     opt = []
     p = False
@@ -46,3 +46,7 @@ def format_query(filters: dict) -> str:
 
     query = base_query +  " AND ".join(opt)
     return query
+
+# Could be expanded on for searching specific user by other users
+def format_user_search(username: str, password: str) -> str:
+    return f"SELECT * FROM users WHERE password = '{password}'"
