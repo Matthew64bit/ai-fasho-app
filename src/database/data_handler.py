@@ -8,7 +8,6 @@ from src.utils.text_formatter import format_counter, format_time
 from src.utils.image_formatter import stitch_images
 from src.my_logger import logger
 
-logger.set_log_file(__name__)
 FILEPATH = f'C:\\Users\\{os.getlogin()}\\Pictures\\'
 debug_val = 0
 
@@ -26,9 +25,11 @@ def organize(conn, cur):
     try:
         for d in data:
             crud.create(conn, cur, d)
+        logger.set_log_file(__name__)
         logger.info(f'Inserted {len(data)} items successfully!')
 
     except Exception as e:
+        logger.set_log_file(__name__)
         logger.error(f'Encountered an error: {str(e)}')
 
 
@@ -43,8 +44,12 @@ def organize_windows():
         for m in range(0, 60):
             for s in range(0, 60):
                 ss, mm, hh = format_time(s), format_time(m), format_time(h)
-                if os.path.exists('{}Screenshots\\Screenshot {}-{}-{} {}{}{}.png'.format(FILEPATH, date[0], date[2], date[1], hh, mm, ss)):
-                    images.append(cv2.imread('{}Screenshots\\Screenshot {}-{}-{} {}{}{}.png'.format(FILEPATH, date[0], date[2], date[1], hh, mm, ss)))
+                if os.path.exists(
+                        '{}Screenshots\\Screenshot {}-{}-{} {}{}{}.png'.format(FILEPATH, date[0], date[2], date[1], hh,
+                                                                               mm, ss)):
+                    images.append(cv2.imread(
+                        '{}Screenshots\\Screenshot {}-{}-{} {}{}{}.png'.format(FILEPATH, date[0], date[2], date[1], hh,
+                                                                               mm, ss)))
 
     idx = 0
     while idx < len(images):
@@ -56,8 +61,7 @@ def organize_windows():
         item['id'] = cid
         data.append(item)
 
-        idx+= 2
-
+        idx += 2
 
     return data
 
@@ -93,7 +97,7 @@ def organize_apple():
 def data_to_json(data):
     date = str(datetime.datetime.now().date())
     with open(f'{FILEPATH}{date}.json', 'w') as f:
-        json.dump(data, f, indent = 4)
+        json.dump(data, f, indent=4)
 
 
 def read_article(bookmark=None):

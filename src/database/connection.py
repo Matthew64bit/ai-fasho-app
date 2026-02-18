@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from src.my_logger import logger
 
 load_dotenv()
-logger.set_log_file(__name__)
 
 
 def connect():
@@ -27,6 +26,7 @@ def connect():
             port='5432'
         )
         cur = conn.cursor()
+        logger.set_log_file(__name__)
         logger.info('Connected to PostgreSQL database')
         return conn, cur
 
@@ -38,4 +38,5 @@ def connect():
 def disconnect(conn, cur):
     cur.close()
     conn.close()
+    logger.set_log_file(__name__)
     logger.info('Disconnected from PostgreSQL database')

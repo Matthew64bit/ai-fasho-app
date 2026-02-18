@@ -18,5 +18,8 @@ def create_account(conn, cur, username, password):
 
 def login(cur, username, password):
     hash_pass = ph.hash(password).split('p=')[1]
-    return read(cur, format_user_search(username, hash_pass))
-
+    data = read(cur, format_user_search(username, hash_pass))
+    if data['username'] == username and data['password'] == hash_pass:
+        return User(username, data['password'])
+    else:
+        return None

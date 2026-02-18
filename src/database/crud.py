@@ -2,8 +2,6 @@
 from src.my_logger import logger
 from psycopg2 import sql
 
-logger.set_log_file(__name__)
-
 
 def create(conn, cur, table_name: str, data: dict):
     columns = data.keys()
@@ -17,6 +15,7 @@ def create(conn, cur, table_name: str, data: dict):
     try:
         cur.execute(query, values)
         conn.commit()
+        logger.set_log_file(__name__)
         logger.info(f'Successfully commited: {data}')
 
     except Exception as e:
